@@ -11,6 +11,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
 
+# This function is called in a separate thread to start a chat between two models
 def start_ollama_chat(id, form):
     llm1 = form["llm-1"]
     llm2 = form["llm-2"]
@@ -27,16 +28,17 @@ def start_ollama_chat(id, form):
     print("Form")
     print(form)
 
-    start_chat(socketio, id, llm1=llm1, llm2=llm2, system_prompt=sys_prompt, chat_prompt=starting_prompt, chat_length=convo_len, closing_prompt=closing_prompt)
+    start_chat(socketio, id, llm1=llm1, llm2=llm2, system_prompt=sys_prompt, chat_prompt=starting_prompt, chat_length=convo_len, closing_prompt=closing_prompt, temp=temp)
     print("starting")
 
+# This route is called when the frontend sends a POST request to /start
 @app.route('/start', methods=['POST'])
 def handle_post():
     if request.form:
         req_id = str(uuid.uuid4())
         thread = Thread(target=start_ollama_chat, args=(req_id, request.form))
         thread.start()
-
+        # Returns a chat id to the frontend that is used to identify the chat and listen for messages
         return jsonify({
             "id": req_id,
             "form": request.form

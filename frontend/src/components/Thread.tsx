@@ -9,7 +9,10 @@ import {
 } from 'solid-js';
 
 // import { socket } from '../socket';
-
+/*
+    * The Thread component is responsible for displaying the messages in the channel.
+    * It listens for messages from the server and updates the UI accordingly.
+*/
 const Thread: Component<{ channelId: Accessor<string | undefined> }> = (
     props,
 ) => {
@@ -17,12 +20,14 @@ const Thread: Component<{ channelId: Accessor<string | undefined> }> = (
         equals: false,
     });
 
+    // Connect to the server
     const socket = io('localhost:3001');
 
     createEffect(() => {
         let id = props.channelId();
         console.log('Id is', id);
         console.log(socket);
+        // Listen for messages from the server for the given chat id
         const listener = (msg) => {
             console.log('rec');
             console.log(msg);
@@ -38,6 +43,7 @@ const Thread: Component<{ channelId: Accessor<string | undefined> }> = (
         };
     });
 
+    // Display the messages in a list format
     return (
         <div class='flex flex-col h-full w-full justify-evenly content-center pt-2'>
             <ul class='list-none'>

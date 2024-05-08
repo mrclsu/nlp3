@@ -1,5 +1,10 @@
 import { Component, createSignal } from 'solid-js';
 
+/* 
+    * The Params component is responsible for taking input from the user and sending it to the server.
+    * It contains a form with input fields for the starting prompt, system prompt, closing prompt, LLMs, conversation length, and temperature.
+*/
+
 const Params: Component<{
     setChannel: (id: string | undefined) => void;
 }> = (props) => {
@@ -7,7 +12,7 @@ const Params: Component<{
 
     const submitForm = (e: Event & { currentTarget: HTMLFormElement }) => {
         e.preventDefault();
-
+        // send the form data to the server
         const sendForm = async () => {
             let formData = new FormData(e.currentTarget);
             let res = await fetch('http://localhost:3001/start', {
@@ -22,7 +27,8 @@ const Params: Component<{
 
         sendForm();
     };
-
+    
+    // Used for form validation
     const enforceBounds = (e: { currentTarget: HTMLInputElement }) => {
         let min = parseInt(e.currentTarget.min);
         let max = parseInt(e.currentTarget.max);
