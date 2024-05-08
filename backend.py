@@ -13,38 +13,37 @@ CHAT_PROMPT = ""
 CHAT_LENGTH = 3
 
 
-
 def post(json):
     r = requests.post(url=url, json=json)
     if r.status_code == 200:
-        fasz = r.json()
-        print(fasz)
-        return True, fasz["message"]["content"]
+        return True, r.json()["message"]["content"]
     else:
         return False, r.text
 
 def build_json(model, messages, first = True):
     return {
         "model": model,
-        "messages": [{"role": "system", "content": SYSTEM_PROMPT}] + [{"role": "user" if i + int(first) % 2 == 1 else "assistant", "content": message} for i, message in enumerate(messages)],
+        "messages": [{"role": "system", "content": SYSTEM_PROMPT}] + [{"role": "user" if (i + int(first)) % 2 == 1 else "assistant", "content": message} for i, message in enumerate(messages)],
         "stream": False
     }
 
 messages = ["Climate change is not real, because the winters are getting colder in some places."]
-# print(messages[-1])
+print("Starting Prompt: ")
+print(messages[-1])
+print()
 for i in range(CHAT_LENGTH):
     succ, resp = post(build_json(LLM1, messages))
     if succ:
         messages.append(resp)
-        # print("\nLLM1:")
-        # print(messages[-1])
+        print("\nLLM1:")
+        print(messages[-1])
     else:
         break
     succ, resp = post(build_json(LLM2, messages, False))
     if succ:
         messages.append(resp)
-        # print("\nLLM2:")
-        # print(messages[-1])
+        print("\nLLM2:")
+        print(messages[-1])
     else:
         break
 
