@@ -11,7 +11,7 @@
 
 To run the frontend and backend, you need to install the dependencies. Run the following commands:
 
-Node.js and npm are required to run the frontend. You can install them from [here](https://nodejs.org/en/).
+Node.js and npm are required to run the frontend. You can install them from [nodejs.org](https://nodejs.org/en/).
 
 ```bash
     pip install -r requirements.txt
@@ -19,7 +19,7 @@ Node.js and npm are required to run the frontend. You can install them from [her
     npm install
 ```
 
-You will also need to install ollama from (ollama.com)[https://ollama.com/]. And run it with the following command:
+You will also need to install ollama from [ollama.com](https://ollama.com/). And run it with the following command:
 
 ```bash
     ollama serve
