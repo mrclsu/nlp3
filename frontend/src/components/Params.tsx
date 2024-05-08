@@ -44,16 +44,18 @@ const Params: Component<{
                 name='starting-prompt'
                 type='text'
                 placeholder='Starting Prompt'
+                required
             />
             <input
                 name='sys-prompt'
                 type='text'
                 placeholder='System Prompt'
+                required
             />
             <input
                 name='closing-prompt'
                 type='text'
-                placeholder='Closing Prompt'
+                placeholder='Closing Prompt (Optional)'
             />
             <div class='flex flex-row justify-between gap-2'>
                 {[1, 2].map((n) => (
@@ -62,6 +64,7 @@ const Params: Component<{
                         type='text'
                         name={`llm-${n}`}
                         placeholder={`LLM ${n}`}
+                        required
                     ></input>
                 ))}
             </div>
@@ -72,6 +75,7 @@ const Params: Component<{
                     onInput={(e) => enforceBounds(e)}
                     placeholder='Conversation Length'
                     type='number'
+                    required
                     min={1}
                     max={20}
                 />

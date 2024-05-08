@@ -11,18 +11,29 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
 
-def start_ollama_chat(data, form):
+def start_ollama_chat(id, form):
     llm1 = form["llm-1"]
     llm2 = form["llm-2"]
+    
+    starting_prompt = form["starting-prompt"]
+    sys_prompt = form["sys-prompt"]
+    closing_prompt = form["closing-prompt"]
 
+    convo_len = int(form["conv-len"])
+    temp = float(form['temp'])
 
-    start_chat(socketio, data)
+    print('ID')
+    print(id)
+    print("Form")
+    print(form)
+
+    start_chat(socketio, id, llm1=llm1, llm2=llm2, system_prompt=sys_prompt, chat_prompt=starting_prompt, chat_length=convo_len, closing_prompt=closing_prompt)
     print("starting")
 
 @app.route('/start', methods=['POST'])
 def handle_post():
     if request.form:
-        req_id = uuid.uuid4()
+        req_id = str(uuid.uuid4())
         thread = Thread(target=start_ollama_chat, args=(req_id, request.form))
         thread.start()
 

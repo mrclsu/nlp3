@@ -1,5 +1,15 @@
 import requests
 
+import json
+from uuid import UUID
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
+
 url = 'http://127.0.0.1:11434/api/chat'
 
 def post(json):
@@ -26,22 +36,22 @@ def start_chat(socketio, chat_id, llm1, llm2, system_prompt, chat_prompt, chat_l
         succ, resp = post(build_json(llm1, messages, system_prompt))
         if succ:
             messages.append(resp)
-            # print("\nLLM1:")
-            # print(messages[-1])
+            print("\nLLM1:")
+            print(resp)
             socketio.emit(chat_id, {'model': 0, 'response': resp})
         else:
             break
         succ, resp = post(build_json(llm2, messages, system_prompt, False))
         if succ:
             messages.append(resp)
-            # print("\nLLM2:")
-            # print(messages[-1])
+            print("\nLLM2:")
+            print(resp)
             socketio.emit(chat_id, {'model': 1, 'response': resp})
         else:
             break
 
     if len(closing_prompt) > 0:
-        closing_llm1 = build_json(llm1, messages)
+        closing_llm1 = build_json(llm1, messages, system_prompt)
         closing_llm1["messages"].append({"role": "user", "content": closing_prompt})
         succ, resp = post(closing_llm1)
         if succ:
@@ -50,7 +60,7 @@ def start_chat(socketio, chat_id, llm1, llm2, system_prompt, chat_prompt, chat_l
             socketio.emit(chat_id, {'model': 0, 'response': resp})
 
         messages.append(closing_prompt)
-        succ, resp = post(build_json(llm2, messages, False))
+        succ, resp = post(build_json(llm2, messages, system_prompt, False))
         if succ:
             # print("\nLLM2:")
             # print(resp)
