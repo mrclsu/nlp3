@@ -19,13 +19,12 @@ Node.js and npm are required to run the frontend. You can install them from [nod
     npm install
 ```
 
-You will also need to install ollama from [ollama.com](https://ollama.com/). And run it with the following command:
+You will also need to install ollama from [ollama.com](https://ollama.com/).
+To download models for the first time, run the following commands in two terminal windows:
 
 ```bash
     ollama serve
 ```
-
-To download models for the first time, run the following command:
 
 ```bash
     ollama pull <model name>
@@ -33,7 +32,11 @@ To download models for the first time, run the following command:
 
 ### Run the web app
 
-In two separate terminals run the following commands:
+In three separate terminals run the following commands:
+
+```bash
+    ollama serve
+```
 
 ```bash
     python backend.py
